@@ -19,6 +19,23 @@ wire   in_res;
 
 assign in_res = ~rst_n;
 
+reg sync_ff1;
+reg sync_ff2;
+wire rst_sync;
+
+always @(posedge clk or posedge in_res) begin
+    if (in_res) begin
+        sync_ff1 <= 1'b1;
+        sync_ff2 <= 1'b1;
+    end
+    else begin
+        sync_ff1 <= 1'b0;
+        sync_ff2 <= sync_ff1;
+    end
+end
+
+assign rst_sync = sync_ff2;
+
 wire [31:0] d0, d1, d2, d3;   
 wire [31:0] k0, k1, k2, k3;
 
@@ -33,15 +50,14 @@ wire [7:0] p14; wire [7:0] p15;
 
 reg enc_d;
 reg dec_d;
-
+wire rising_edge_enc;
+wire rising_edge_dec;
 
 assign uio_oe  = 8'hc0;
 assign uio_out[5:0]  = 6'b0; 
 
-
-
 always @(posedge clk) begin
-    if (in_res)begin
+    if (rst_sync)begin
 		enc_d <= 1'b0;
 		dec_d <= 1'b0;
     end else begin 
@@ -51,14 +67,14 @@ always @(posedge clk) begin
 
 end
 
-wire rising_edge_enc  =  uio_in[3] & ~ enc_d;
-wire rising_edge_dec  =  uio_in[4] & ~ dec_d;
+assign rising_edge_enc  =  uio_in[3] & ~ enc_d;
+assign rising_edge_dec  =  uio_in[4] & ~ dec_d;
 
 
 
 input_handshake u0(
     .clk(clk),
-    .rst(in_res),
+    .rst(rst_sync),
     .req_rx(uio_in[0]),
     .data_in(ui_in),
     .ack_rx(uio_out[7]),
@@ -75,7 +91,7 @@ input_handshake u0(
 
 lea_128_top u1(
 	.clk(clk),
-	.reset(in_res),
+	.reset(rst_sync),
 	.pb_enc(rising_edge_enc),
 	.pb_dec(rising_edge_dec),
 	.key_in0(k1),
@@ -108,7 +124,7 @@ lea_128_top u1(
 
 output_handshake u2(
 	.clk(clk),
-	.rst(in_res),
+	.rst(rst_sync),
 	.req(uio_in[1]),
 	.ack(uio_in[2]),
 	.valid(uio_out[6]),
