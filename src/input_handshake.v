@@ -37,8 +37,9 @@ module input_handshake (
     reg state;
 
 
-    reg [5:0] byte_cnt; 
-
+    reg [4:0] byte_cnt; 
+    wire [3:0] idx;
+    assign idx = byte_cnt[3:0];
 
     reg [7:0] key_mem  [0:15];
     reg [7:0] data_mem [0:15];
@@ -63,9 +64,9 @@ module input_handshake (
                     if (req_rx_sync) begin
                         
                         if (byte_cnt < 16)
-                            key_mem[byte_cnt] <= data_in;
+                            key_mem[idx] <= data_in;
                         else
-                            data_mem[byte_cnt - 16] <= data_in;
+                            data_mem[idx] <= data_in;
 
                         ack_rx   <= 1;
                         state <= WAIT0;
