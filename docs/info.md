@@ -6,17 +6,18 @@ sections.
 You can also include images in this folder and reference them in the markdown. Each image must be less than
 512 kb in size, and the combined size of all images must be less than 1 MB.
 -->
+## About 
+
+The design was implemented as part of an undergraduate academic project.
+
+This design implements the LEA-128 cryptographic algorithm according to the specifications presented in the original paper by its developers [1]
+and is based on the ideas and architectures proposed in [2] and [3] for an area-efficient implementation.
+
+The design supports both encryption and decryption operations using a very simple handshake-based byte-oriented interface.
 
 ## How it works
 
-This design implements the LEA128 cryptographic algorithm according to the developers’ original paper [1]
-and is based on the ideas proposed in [2] and [3] for an area-efficient implementation.
-
-The design was developed as part of an undergraduate academic project, and employs a straightforward (naïve) hardware implementation approach.
-
-The design supports both encryption and decryption operations using a very simple handshake-based byte interface.
-
-Internally, the module receives:
+The module receives:
 
 * a 128-bit master key (16 bytes)
 * a 128-bit data block (16 bytes)
