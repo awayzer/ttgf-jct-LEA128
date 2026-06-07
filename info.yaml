@@ -1,6 +1,6 @@
 # Tiny Tapeout project information
 project:
-  title:        "Tiny Tapeout LEA 128"      # Project title
+  title:        "LEA-128"      # Project title
   author:       "awayzer JCT"             # Your name
   discord:      ""                         # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
   description:  "iterative approach implementation of the LEA128 block cipher"      # One line description of what your project does
